@@ -115,6 +115,7 @@ public class SceneManager : MonoBehaviour  {
         if (e != null) {
             if (autoRefreshCoroutine != null) {
                 StopCoroutine(autoRefreshCoroutine);
+                autoRefreshCoroutine = null;
             }
             SetCurrentScreen(loginScreen);
         } else if (currentScreen == null) {
@@ -179,6 +180,12 @@ public class SceneManager : MonoBehaviour  {
     }
 
     private void RefreshData() {
+        // Reiniciar auto-refresco de datos, ya que los actualizamos manualmente ahora
+        if (autoRefreshCoroutine != null) {
+            StopCoroutine(autoRefreshCoroutine);
+            autoRefreshCoroutine = StartCoroutine(AutoRefreshCoroutine());
+        }
+
         plman.GetDataFromServer(null, null);
     }
 
