@@ -148,11 +148,12 @@ public class SceneManager : MonoBehaviour  {
             if (screen != null) {
                 backButton.gameObject.SetActive(screen == studentsScreen || screen == settingsScreen);
                 settingsButton.gameObject.SetActive( !backButton.gameObject.activeSelf );
-
+                
+                bodyCanvasGroup.interactable = true; // El body ha de ser "interactable" para que en su OnEnable podamos establecer el foco en el control deseado
                 screen.SetActive(true);
+
                 alphaCanvasTweenId = LeanTween.alphaCanvas(bodyCanvasGroup, 1f, TRANSITION_DURATION * 0.5f).setEaseInCirc().setOnComplete(() => {
-                    headerCanvasGroup.interactable = true;
-                    bodyCanvasGroup.interactable = true; 
+                    headerCanvasGroup.interactable = true; // El header se habilita cuando termina la transición para que el usuario no pueda hacer click mientras
                 }).id;
             }
             
