@@ -64,18 +64,13 @@ public class LoginScreen : MonoBehaviour {
         plman.GetDataFromServer(userInputField.text, passwordInputfield.text);
     }
 
-    private void SetControlsEnabled(bool value) {
-        userInputField.enabled = value;
-        passwordInputfield.enabled = value;
-        loginButton.enabled = value;
-    }
-
     private void OnPLManWebRequestFinished(System.Exception e) {
+        SetControlsEnabled(true);
+
         if (e != null) {
             Debug.LogError(e);
             errorText.gameObject.SetActive(true);
             errorText.text = e.Message;
-            SetControlsEnabled(true);
             return;
         }
 
@@ -84,6 +79,12 @@ public class LoginScreen : MonoBehaviour {
         if (OnLoggedIn != null) {
             OnLoggedIn();
         }
+    }
+
+    private void SetControlsEnabled(bool value) {
+        userInputField.enabled = value;
+        passwordInputfield.enabled = value;
+        loginButton.enabled = value;
     }
 
 }

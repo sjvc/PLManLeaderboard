@@ -11,7 +11,8 @@ public class SceneManager : MonoBehaviour  {
     public float autoRefreshInterval = 30; // Seconds
 
     public SpriteRenderer backgroundSprite;
-    public CanvasGroup canvasGroup;
+    public CanvasGroup headerCanvasGroup;
+    public CanvasGroup bodyCanvasGroup;
     public PLManWebScrapper plman;
 
     public CameraController cameraController;
@@ -126,9 +127,13 @@ public class SceneManager : MonoBehaviour  {
             return;
         }
 
-        LeanTween.cancel(alphaCanvasTweenId);
+        
+        // disabled during transition
+        headerCanvasGroup.interactable = false;
+        bodyCanvasGroup.interactable = false; 
 
-        alphaCanvasTweenId = LeanTween.alphaCanvas(canvasGroup, 0f, currentScreen != null ? TRANSITION_DURATION * 0.5f : 0f).setEaseOutCirc().setOnComplete(() => {
+        LeanTween.cancel(alphaCanvasTweenId);
+        alphaCanvasTweenId = LeanTween.alphaCanvas(bodyCanvasGroup, 0f, currentScreen != null ? TRANSITION_DURATION * 0.5f : 0f).setEaseOutCirc().setOnComplete(() => {
             // Todas a false, de forma que se ejecuta el OnDisable de la que pasa a estar inactiva
             loginScreen.SetActive(false);
             groupsScreen.SetActive(false);
@@ -144,7 +149,10 @@ public class SceneManager : MonoBehaviour  {
                 settingsButton.gameObject.SetActive( !backButton.gameObject.activeSelf );
 
                 screen.SetActive(true);
-                alphaCanvasTweenId = LeanTween.alphaCanvas(canvasGroup, 1f, TRANSITION_DURATION * 0.5f).setEaseInCirc().id;
+                alphaCanvasTweenId = LeanTween.alphaCanvas(bodyCanvasGroup, 1f, TRANSITION_DURATION * 0.5f).setEaseInCirc().setOnComplete(() => {
+                    headerCanvasGroup.interactable = true;
+                    bodyCanvasGroup.interactable = true; 
+                }).id;
             }
             
             previousScreen = currentScreen;

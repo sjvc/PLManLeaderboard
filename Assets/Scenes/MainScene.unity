@@ -532,6 +532,7 @@ GameObject:
   m_Component:
   - component: {fileID: 312197749}
   - component: {fileID: 312197751}
+  - component: {fileID: 312197752}
   m_Layer: 0
   m_Name: Header
   m_TagString: Untagged
@@ -571,6 +572,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 312197748}
   m_CullTransparentMesh: 1
+--- !u!225 &312197752
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 312197748}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1001 &316093775
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3266,7 +3279,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   autoRefreshInterval: 30
   backgroundSprite: {fileID: 1565056320}
-  canvasGroup: {fileID: 203634034}
+  headerCanvasGroup: {fileID: 312197752}
+  bodyCanvasGroup: {fileID: 203634034}
   plman: {fileID: 1384548530}
   cameraController: {fileID: 519420033}
   flashLight: {fileID: 597269054}
