@@ -7,10 +7,10 @@ public class Student {
         
     }
 
-    public Student(string name, string group, decimal score) {
-        this.name = name;
-        this.group = group;
-        this.score = score;
+    public void Reset() {
+        this.name = null;
+        this.group = null;
+        this.score = 0;
     }
 
     public override string ToString() {

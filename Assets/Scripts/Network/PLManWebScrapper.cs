@@ -4,6 +4,7 @@ using UnityEngine;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Globalization;
+using Baviux;
 
 public class PLManWebScrapper : MonoBehaviour {
     public GameObject loadingIndicator;
@@ -14,6 +15,14 @@ public class PLManWebScrapper : MonoBehaviour {
     public List<StudentGroup> groups {get; private set;} = new List<StudentGroup>();
 
     public event System.Action<System.Exception> OnRequestFinished;
+
+    private static ObjectPool<StudentGroup> groupPool = new ObjectPool<StudentGroup>(null, group => {
+        for (int i=0; i<group.students.Count; i++) {
+            studentPool.Release(group.students[i]);
+            group.Reset();
+        }
+    });
+    private static ObjectPool<Student> studentPool = new ObjectPool<Student>(null, student => student.Reset());
 
     private void Awake() {
         loadingIndicator.SetActive(false);
@@ -87,12 +96,16 @@ public class PLManWebScrapper : MonoBehaviour {
         // Create new data
         if (groups.Count == 0) {
             for (int g=1; g<=10; g++) {
-                StudentGroup group = new StudentGroup("Group " + g);
+                StudentGroup group = groupPool.Get();
+                group.name = "Group " + g;
                 group.averageScore = (decimal)Random.Range(0f, 10f);
                 groups.Add(group);
 
                 for (int s=1; s<=25; s++) {
-                    Student student = new Student("Student " + s, group.name, (decimal)Random.Range(0f, 10f));
+                    Student student = studentPool.Get();
+                    student.name = "Student " + s;
+                    student.group = group.name;
+                    student.score = (decimal)Random.Range(0f, 10f);
                     group.students.Add(student);
                 }
             }
@@ -113,6 +126,9 @@ public class PLManWebScrapper : MonoBehaviour {
     }
 
     private void ParseResponseText(string responseText) {
+        for (int i=0; i<groups.Count; i++) {
+            groupPool.Release(groups[i]);
+        }
         groups.Clear();
 
         string[] lines = responseText.Substring("<tbody>", "</tbody>").Split('\n');
@@ -121,7 +137,7 @@ public class PLManWebScrapper : MonoBehaviour {
         for (int i=0; i<lines.Length; i++) {
             // NAME
             if (lines[i].Contains("<td align=\"left\">")) {
-                student = new Student();
+                student = studentPool.Get();
                 student.name = Regex.Replace(lines[i], "<td.*><a.*>(.*)</a>.*</td>", "$1").Trim().ToUpper();
 
                 string[] compundName = student.name.Split(',');
@@ -136,7 +152,8 @@ public class PLManWebScrapper : MonoBehaviour {
                 // Add to students group
                 StudentGroup group = groups.Find(g => g.name == student.group);
                 if (group == null) {
-                    group = new StudentGroup(student.group);
+                    group = groupPool.Get();
+                    group.name = student.group;
                     groups.Add(group);
                 }
                 group.students.Add(student);

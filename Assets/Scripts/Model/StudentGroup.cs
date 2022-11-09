@@ -7,8 +7,15 @@ public class StudentGroup {
     public decimal averageScore;
     public List<Student> students {get; private set;} = new List<Student>();
 
-    public StudentGroup(string name) {
-        this.name = name;
+    public StudentGroup() {
+
+    }
+
+    public void Reset() {
+        this.name = null;
+        this.numStudentsWithScore = 0;
+        this.averageScore = 0;
+        this.students.Clear();
     }
 
     public override string ToString() {
