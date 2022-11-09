@@ -12,10 +12,12 @@ public class LeaderboardItem : MonoBehaviour, IPrefabPoolItem {
     private TextMeshProUGUI rankText;
     private TextMeshProUGUI titleText;
     private TextMeshProUGUI scoreText;
-    private ParticleSystem spikes;
+    private ParticleSystem sparks;
     private RectTransform dataContainerRect;
     private CanvasGroup dataContainerCanvasGroup;
     private RectTransform canvasRect;
+    private Camera mainCamera;
+    private Canvas canvas;
 
     public int rank {get; private set;}
     public string title {get; private set;}
@@ -25,10 +27,12 @@ public class LeaderboardItem : MonoBehaviour, IPrefabPoolItem {
         rankText = transform.Find("DataContainer/RankText").GetComponent<TextMeshProUGUI>();
         titleText = transform.Find("DataContainer/TitleText").GetComponent<TextMeshProUGUI>();
         scoreText = transform.Find("DataContainer/ScoreText").GetComponent<TextMeshProUGUI>();
-        spikes = transform.Find("SparkParticles").GetComponent<ParticleSystem>();
+        sparks = transform.Find("SparkParticles").GetComponent<ParticleSystem>();
         dataContainerRect = transform.Find("DataContainer").GetComponent<RectTransform>();
         dataContainerCanvasGroup = transform.Find("DataContainer").GetComponent<CanvasGroup>();
         canvasRect = GetComponentInParent<Canvas>().GetComponent<RectTransform>();
+        mainCamera = Camera.main;
+        canvas = GetComponentInParent<Canvas>();
     }
 
     public void SetRank(int rank) {
@@ -60,9 +64,10 @@ public class LeaderboardItem : MonoBehaviour, IPrefabPoolItem {
             return false;
         }
 
-        spikes.gameObject.SetActive(true);
+        sparks.transform.position = sparks.transform.position.Set3(x: ScreenUtils.ScreenWidthUnits(mainCamera) * 0.5f * canvas.transform.localScale.x);
+        sparks.gameObject.SetActive(true);
         LeanTween.delayedCall(gameObject, 2f, () => {
-            spikes.gameObject.SetActive(false);
+            sparks.gameObject.SetActive(false);
         });
 
         dataContainerCanvasGroup.alpha = 0;
@@ -92,7 +97,7 @@ public class LeaderboardItem : MonoBehaviour, IPrefabPoolItem {
 
     void IPrefabPoolItem.OnRecyclePoolItem() {
         LeanTween.cancel(gameObject);
-        spikes.gameObject.SetActive(false);
+        sparks.gameObject.SetActive(false);
         dataContainerCanvasGroup.alpha = 1;
         dataContainerRect.anchoredPosition = dataContainerRect.anchoredPosition.Set2(x: 0);
 
