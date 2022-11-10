@@ -33,8 +33,8 @@ public class PLManWebScrapper : MonoBehaviour {
             return; // Si ya se está haciendo un request, no hacemos nada
         }
 
-        // StartCoroutine(GetDataFromServerCoroutine(user, passsword));
-        StartCoroutine(GetFakeDataFromServerCoroutine()); // Descomentar (y comentar la línea anterior) para usar datos de prueba
+        StartCoroutine(GetDataFromServerCoroutine(user, passsword));
+        // StartCoroutine(GetFakeDataFromServerCoroutine()); // Descomentar (y comentar la línea anterior) para usar datos de prueba
     }
 
     private IEnumerator GetDataFromServerCoroutine(string user, string password) {
