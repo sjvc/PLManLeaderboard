@@ -4,7 +4,7 @@
 # To import these sprites into your Unity project, download "TexturePackerImporter":
 # https://www.codeandweb.com/texturepacker/unity
 #
-# $TexturePacker:SmartUpdate:b9962a5d6bfe902bb962e7302378ee31:90e7325b635769e040c9cb424ce7101f:8ab4c75ff4b1bbcb67e3b6e53ae23d58$
+# $TexturePacker:SmartUpdate:9e9a37c422c362a4da467238a6f18af2:badf9fccd7e47c48346a04a2bc8cee69:8ab4c75ff4b1bbcb67e3b6e53ae23d58$
 #
 :format=40300
 :texture=Sprites.png
@@ -20,4 +20,5 @@ panel-neon-on;242;784;239;239; 0.5;0.5; 0;0;0;0
 panel-small-neon-off;333;662;120;120; 0.5;0.5; 0;0;0;0
 panel-small-neon-on;333;540;120;120; 0.5;0.5; 0;0;0;0
 pixel-slice;483;1014;9;9; 0.5;0.5; 0;0;0;0
+position-change-bg;455;734;48;48; 0.5;0.5; 0;0;0;0
 spark;1;500;116;116; 0.5;0.5; 0;0;0;0

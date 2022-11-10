@@ -41,9 +41,9 @@ public class StudentsScreen : MonoBehaviour {
             data.Add(students[i].name, students[i].score);
         }
 
-        bool animationPerformed = leaderboard.SetData(data, group, Preferences.MaxStudentsInLeaderboard, animate);
+        bool leaderboardChanged = leaderboard.SetData(data, group, Preferences.MaxStudentsInLeaderboard, animate);
 
-        if (animationPerformed && OnDataRefreshAnimationPerformed != null) {
+        if (leaderboardChanged && animate && OnDataRefreshAnimationPerformed != null) {
             OnDataRefreshAnimationPerformed();
         }
     }

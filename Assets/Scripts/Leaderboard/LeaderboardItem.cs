@@ -1,17 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 using Baviux;
 
 public class LeaderboardItem : MonoBehaviour, IPrefabPoolItem {
     public LeaderboardItemClickHandler clickHandler;
+    public Color positiveRankChangeColor = Color.green;
+    public Color negativeRankChangeColor = Color.red;
 
     private const int SCORE_MULTIPLIER = 3000000;
     
     private TextMeshProUGUI rankText;
     private TextMeshProUGUI titleText;
     private TextMeshProUGUI scoreText;
+    private Image rankChangeBg;
+    private TextMeshProUGUI rankChangeText;
     private ParticleSystem sparks;
     private RectTransform dataContainerRect;
     private CanvasGroup dataContainerCanvasGroup;
@@ -20,6 +25,7 @@ public class LeaderboardItem : MonoBehaviour, IPrefabPoolItem {
     private Canvas canvas;
 
     public int rank {get; private set;}
+    public int rankChange {get; private set;}
     public string title {get; private set;}
     public decimal score {get; private set;}
 
@@ -27,6 +33,8 @@ public class LeaderboardItem : MonoBehaviour, IPrefabPoolItem {
         rankText = transform.Find("DataContainer/RankText").GetComponent<TextMeshProUGUI>();
         titleText = transform.Find("DataContainer/TitleText").GetComponent<TextMeshProUGUI>();
         scoreText = transform.Find("DataContainer/ScoreText").GetComponent<TextMeshProUGUI>();
+        rankChangeBg = transform.Find("DataContainer/RankChange").GetComponent<Image>();
+        rankChangeText =  transform.Find("DataContainer/RankChange/RankChangeText").GetComponent<TextMeshProUGUI>();
         sparks = transform.Find("SparkParticles").GetComponent<ParticleSystem>();
         dataContainerRect = transform.Find("DataContainer").GetComponent<RectTransform>();
         dataContainerCanvasGroup = transform.Find("DataContainer").GetComponent<CanvasGroup>();
@@ -37,7 +45,14 @@ public class LeaderboardItem : MonoBehaviour, IPrefabPoolItem {
 
     public void SetRank(int rank) {
         this.rank = rank;
-        rankText.text = "#" + rank;
+        rankText.text = rank.ToString();
+    }
+
+    public void SetRankChange(int change) {
+        this.rankChange = change;
+        rankChangeText.text = Mathf.Abs(change).ToString();
+        rankChangeBg.color = change < 0 ? negativeRankChangeColor : positiveRankChangeColor;
+        rankChangeBg.gameObject.SetActive(change != 0);
     }
 
     public void SetTitle(string title) {
@@ -59,9 +74,15 @@ public class LeaderboardItem : MonoBehaviour, IPrefabPoolItem {
         clickHandler.onClickListeners = onClickListeners;
     }
 
-    public bool SetTitleAndScoreWithAnimation(string newTitle, decimal newScore) {
+    public bool SetTitleAndScore(string newTitle, decimal newScore, bool animate) {
         if (newTitle == title && newScore == score) {
             return false;
+        }
+
+        if (!animate) {
+            SetTitle(newTitle);
+            SetScore(newScore);
+            return true;
         }
 
         sparks.transform.position = sparks.transform.position.Set3(x: ScreenUtils.ScreenWidthUnits(mainCamera) * 0.5f * canvas.transform.localScale.x);
@@ -92,7 +113,10 @@ public class LeaderboardItem : MonoBehaviour, IPrefabPoolItem {
     }
 
     void IPrefabPoolItem.OnRetrievePoolItem() {
-        
+        SetRank(0);
+        SetRankChange(0);
+        SetTitle("");
+        SetScore(0);
     }
 
     void IPrefabPoolItem.OnRecyclePoolItem() {
@@ -100,10 +124,6 @@ public class LeaderboardItem : MonoBehaviour, IPrefabPoolItem {
         sparks.gameObject.SetActive(false);
         dataContainerCanvasGroup.alpha = 1;
         dataContainerRect.anchoredPosition = dataContainerRect.anchoredPosition.Set2(x: 0);
-
-        SetRank(0);
-        SetTitle("");
-        SetScore(0);
     }
 
 }

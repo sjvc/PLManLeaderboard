@@ -34,9 +34,9 @@ public class GroupsScreen : MonoBehaviour, ILeaderboardItemClickListener {
             data.Add(plman.groups[i].name, plman.groups[i].averageScore);
         }
 
-        bool animationPerformed = leaderboard.SetData(data, "groups", animate: animate);
+        bool leaderboardChanged = leaderboard.SetData(data, "groups", animate: animate);
 
-        if (animationPerformed && OnDataRefreshAnimationPerformed != null) {
+        if (leaderboardChanged && animate && OnDataRefreshAnimationPerformed != null) {
             OnDataRefreshAnimationPerformed();
         }
     }

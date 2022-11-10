@@ -70,7 +70,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -296,6 +296,27 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: position-change-bg
+      rect:
+        serializedVersion: 2
+        x: 455
+        y: 734
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 95fa0be458502457aadec895ef66fd3c
+      internalID: -367153444
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -312,6 +333,7 @@ TextureImporter:
       icon-settings: -1281113621
       spark: -1226585458
       panel-neon-off: -614975942
+      position-change-bg: -367153444
       panel-small-neon-off: 624958114
       pixel-slice: -687567172
       icon-back: 1346840125

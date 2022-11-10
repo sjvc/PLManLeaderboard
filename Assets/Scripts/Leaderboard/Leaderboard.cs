@@ -10,6 +10,7 @@ public class Leaderboard : MonoBehaviour {
 
     private List<LeaderboardItem> items = new List<LeaderboardItem>();
     private string currentDataId = null;
+    private LeaderBoardData initialData = new LeaderBoardData(); // Datos iniciales, para luego comparar las variaciones de posiciones de cada elemento
 
     private RectTransform rectTransform;
 
@@ -22,30 +23,39 @@ public class Leaderboard : MonoBehaviour {
     }
 
     public bool SetData(LeaderBoardData data, string dataId = null, int maxEntries = 0, bool animate = true) {
-        bool animationPerformed = false;
+        bool leaderboardChanged = false;
 
         data.Sort();
 
         int dataCount = maxEntries == 0 ? data.Count : Mathf.Min(data.Count, maxEntries);
 
-        // Si no tiene el mismo id o no tiene el mismo número de elementos, borramos todos y los añadimos de nuevo
-        if (!animate || (dataId == null || currentDataId != dataId || dataCount != items.Count)) {
+        // Si tiene el mismo id y mismo número de elementos, hacemos el cambio elemento a elemento
+        if (dataId != null && currentDataId == dataId && dataCount == items.Count) {
+            for (int i=0; i<dataCount; i++) {
+                leaderboardChanged |= items[i].SetTitleAndScore(data.Get(i).text, data.Get(i).score, animate);
+
+                // Si ha habido un cambio -> calcular cambio de posición respecto a los datos iniciales
+                if (leaderboardChanged) {
+                    int initialPosition = initialData.IndexOf(data.Get(i).text);
+                    items[i].SetRankChange(initialPosition - i);
+                }
+            }
+        }
+        // Si los datos no tienen el mismo id y número de elementos, borramos todos y los añadimos de nuevo
+        else {
             ClearData();
 
             for (int i=0; i<dataCount; i++) {
                 AddItem(i+1, data.Get(i));
             }
+
+            // Guardamos los datos iniciales
+            data.CloneTo(initialData);
         } 
-        // Si tiene el mismo id y mismo número de elementos, hacemos el cambio de forma animada
-        else {
-            for (int i=0; i<dataCount; i++) {
-                animationPerformed |= items[i].SetTitleAndScoreWithAnimation(data.Get(i).text, data.Get(i).score);
-            }
-        }
 
         currentDataId = dataId;
 
-        return animationPerformed;
+        return leaderboardChanged;
     }
 
     private void AddItem(int rank, LeaderBoardData.LeaderBoardItemData data) {
@@ -101,7 +111,25 @@ public class LeaderBoardData {
         return data[i];
     }
 
+    public int IndexOf(string text) {
+        for (int i=0; i<data.Count; i++) {
+            if (data[i].text == text) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
     public void Sort() {
         data.Sort((d1, d2) => {return d2.score.CompareTo(d1.score);});
+    }
+    
+    public void CloneTo(LeaderBoardData clonedData) {
+        clonedData.Clear();
+
+        for (int i=0; i<data.Count; i++) {
+            clonedData.Add(Get(i).text, Get(i).score);
+        }
     }
 }
