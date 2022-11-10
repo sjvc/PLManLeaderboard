@@ -199,7 +199,7 @@ public class SceneManager : MonoBehaviour  {
         cameraController.Shake(0.02f, 0.7f);
         
         float screenWidthUnits = ScreenUtils.ScreenWidthUnits(mainCamera);
-        flashLight.transform.localScale = 2f * flashLight.transform.localScale.Set3(x: screenWidthUnits <= flashLightSpriteRenderer.size.x ? 1 : screenWidthUnits / flashLightSpriteRenderer.size.x);
+        flashLight.transform.localScale = flashLight.transform.localScale.Set3(x: screenWidthUnits <= flashLightSpriteRenderer.size.x ? 1 : 2f * screenWidthUnits / flashLightSpriteRenderer.size.x);
         flashLight.Flash(0.8f);
     }
 
