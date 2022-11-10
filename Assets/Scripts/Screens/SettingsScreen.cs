@@ -6,6 +6,11 @@ using TMPro;
 
 public class SettingsScreen : MonoBehaviour {
     public TMP_InputField maxStudentsInputField;
+    public TextMeshProUGUI versionText;
+
+    private void Start() {
+        versionText.text = "v" + Application.version;
+    }
 
     private void OnEnable() {
         int maxStudents = Preferences.MaxStudentsInLeaderboard;
