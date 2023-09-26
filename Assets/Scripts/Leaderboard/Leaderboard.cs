@@ -122,7 +122,13 @@ public class LeaderBoardData {
     }
 
     public void Sort() {
-        data.Sort((d1, d2) => {return d2.score.CompareTo(d1.score);});
+        data.Sort((d1, d2) => {
+            if (d1.score == d2.score) {
+                return d1.text.CompareTo(d2.text);
+            }
+            
+            return d2.score.CompareTo(d1.score);
+        });
     }
     
     public void CloneTo(LeaderBoardData clonedData) {
